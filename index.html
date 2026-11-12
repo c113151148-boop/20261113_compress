@@ -180,6 +180,10 @@
                 <div class="stat-value" id="statNew">0 B</div>
             </div>
             <div class="stat-box">
+                <div class="stat-label">壓縮比</div>
+                <div class="stat-value" id="statCompRatio">0</div>
+            </div>
+            <div class="stat-box">
                 <div class="stat-label">壓縮率 / 變化</div>
                 <div class="stat-value" id="statRatio">0%</div>
             </div>
@@ -353,10 +357,16 @@
                     // 數據面板更新
                     const origSize = currentInputBytes.length;
                     const newSize = outputBytes.length;
-                    const ratio = ((newSize / origSize) * 100).toFixed(1);
+                    
+                    // 計算壓縮比
+                    const compRatio = newSize === 0 ? "N/A" : (origSize / newSize).toFixed(2);
+                    
+                    // 計算壓縮率為
+                    const ratio = origSize === 0 ? 0 : ((1 - (newSize / origSize)) * 100).toFixed(1);
 
                     document.getElementById('statOriginal').innerText = formatBytes(origSize);
                     document.getElementById('statNew').innerText = formatBytes(newSize);
+                    document.getElementById('statCompRatio').innerText = compRatio;
                     document.getElementById('statRatio').innerText = `${ratio}%`;
                     document.getElementById('statTime').innerText = `${timeTaken} ms`;
                     
@@ -365,7 +375,7 @@
                     const warningBox = document.getElementById('compressionWarning');
 
                     if (operation === 'compress') {
-                        if (ratio >= 100) {
+                        if (ratio <= 0) {
                             // 壓縮率變大或不變，顯示紅字與警告框
                             ratioEl.style.color = "var(--warning)";
                             warningBox.style.display = 'block';
