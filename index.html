@@ -16,6 +16,9 @@
             --primary-hover: #2563eb;
             --success: #10b981;
             --success-hover: #059669;
+            /* ===== [新增區塊開始：加入警告色變數] ===== */
+            --warning: #ef4444;
+            /* ===== [新增區塊結束] ===== */
             --text-main: #e0e0e0;
             --text-muted: #9ca3af;
             --border: #333333;
@@ -109,6 +112,19 @@
         .stat-value { font-size: 24px; font-weight: bold; color: var(--primary); margin-top: 4px; }
         .stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
+        /* 警告提示框樣式 */
+        .warning-box {
+            display: none; /* 預設隱藏 */
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--warning);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--warning);
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
         .status { margin-top: 12px; font-size: 14px; color: var(--text-muted); text-align: center; }
     </style>
 </head>
@@ -173,6 +189,11 @@
                 <div class="stat-label">執行耗時</div>
                 <div class="stat-value" id="statTime">0 ms</div>
             </div>
+        </div>
+
+        <!-- 警告提示容器 -->
+        <div id="compressionWarning" class="warning-box">
+            壓縮後的檔案比原檔案還大！此演算法可能不適合目前的檔案，建議嘗試別種演算法。
         </div>
 
         <details>
@@ -341,11 +362,24 @@
                     document.getElementById('statRatio').innerText = `${ratio}%`;
                     document.getElementById('statTime').innerText = `${timeTaken} ms`;
                     
+                    /* 判斷與控制警告區塊的邏輯 */
                     const ratioEl = document.getElementById('statRatio');
+                    const warningBox = document.getElementById('compressionWarning');
+
                     if (operation === 'compress') {
-                        ratioEl.style.color = ratio < 100 ? "var(--success)" : "#ef4444";
+                        if (ratio >= 100) {
+                            // 壓縮率變大或不變，顯示紅字與警告框
+                            ratioEl.style.color = "var(--warning)";
+                            warningBox.style.display = 'block';
+                        } else {
+                            // 壓縮成功，顯示綠字並隱藏警告框
+                            ratioEl.style.color = "var(--success)";
+                            warningBox.style.display = 'none';
+                        }
                     } else {
+                        // 解壓縮模式，顯示藍字並隱藏警告框
                         ratioEl.style.color = "var(--primary)";
+                        warningBox.style.display = 'none';
                     }
 
                     // 如果是壓縮操作，預設 Hex；否則預設 Text 預覽
