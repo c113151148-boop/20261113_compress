@@ -1,5 +1,3 @@
-# lz78.py
-
 def compress_data(data: bytes) -> bytes:
     """
     給 JS 用: LZ78 壓縮
@@ -13,9 +11,9 @@ def compress_data(data: bytes) -> bytes:
     if not data:
         return b""
 
-    # 初始化字典，索引 0 代表空位元組
+    # 初始化字典, 索引 0 為空位元組
     dictionary = {b"": 0}
-    dict_size = 1
+    dict_size = 1 # 下一個新字串的字典索引
     
     out = bytearray()
     w = b""
@@ -25,22 +23,22 @@ def compress_data(data: bytes) -> bytes:
         if wb in dictionary:
             w = wb
         else:
-            # 輸出格式：(字典索引, 下一個字元)
-            # 將字典索引轉為 2 bytes，並接上 1 byte 的字元
+            # 輸出: (字典索引, 下一個字元)
+            # 字典索引轉為 2 bytes 並接上 1 byte 的字元
             out.extend(dictionary[w].to_bytes(2, 'big'))
             out.append(b)
             
-            # 加入新字串到字典
+            # 將新字串加進字典
             dictionary[wb] = dict_size
-            dict_size += 1
+            dict_size = dict_size + 1
             w = b""
             
-            # 若字典滿了 (2 bytes 上限 65535)，則重置字典
+            # 若字典滿了重置字典
             if dict_size == 65535:
                 dictionary = {b"": 0}
                 dict_size = 1
 
-    # 如果檔案結束時，仍有尚未輸出的緩衝區內容，則只輸出索引 (2 bytes)
+    # 檔案結束時如果未輸出的緩衝區 (w) 還有內容, 則只輸出對應索引 (2 bytes)
     if w:
         out.extend(dictionary[w].to_bytes(2, 'big'))
         
@@ -63,21 +61,21 @@ def decompress_data(data: bytes) -> bytes:
     dict_size = 1
     
     out = bytearray()
-    i = 0
     length = len(data)
+    i = 0
     
     while i < length:
         # 讀取 2 bytes 的索引
         if i + 2 <= length:
             idx = int.from_bytes(data[i:i+2], 'big')
-            i += 2
+            i = i + 2
         else:
             break  # 檔案毀損或不完整
             
         # 讀取 1 byte 的字元
         if i < length:
             char_byte = data[i]
-            i += 1
+            i = i + 1
             
             # 重建字串
             entry = dictionary[idx] + bytes([char_byte])
@@ -85,7 +83,7 @@ def decompress_data(data: bytes) -> bytes:
             
             # 加入字典
             dictionary[dict_size] = entry
-            dict_size += 1
+            dict_size = dict_size + 1
             
             # 對應壓縮時的字典重置機制
             if dict_size == 65535:
