@@ -16,9 +16,7 @@
             --primary-hover: #2563eb;
             --success: #10b981;
             --success-hover: #059669;
-            /* ===== [新增區塊開始：加入警告色變數] ===== */
-            --warning: #ef4444;
-            /* ===== [新增區塊結束] ===== */
+            --warning: #ef4444
             --text-main: #e0e0e0;
             --text-muted: #9ca3af;
             --border: #333333;
@@ -165,7 +163,7 @@
         </div>
 
         <button id="processBtn" disabled>環境載入中，請稍候...</button>
-        <div class="status" id="systemStatus">等待 Python 模組...(第一次載入會耗時較久)</div>
+        <div class="status" id="systemStatus">等待 Python 模組...(第一次載入會比較久)</div>
     </div>
 
     <!-- 結果展示 (預設隱藏) -->
@@ -330,7 +328,7 @@
             const operation = document.getElementById('operation').value;
             const algorithm = document.getElementById('algorithm').value;
             
-            document.getElementById('systemStatus').innerText = "運算中...(需耗時一定時間)";
+            document.getElementById('systemStatus').innerText = "運算中...(需要一定的時間)";
             document.getElementById('processBtn').disabled = true;
 
             setTimeout(() => {
