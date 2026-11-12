@@ -166,7 +166,7 @@
         <div class="status" id="systemStatus">等待 Python 模組...(第一次載入會比較久)</div>
     </div>
 
-    <!-- 結果展示 (預設隱藏) -->
+    <!-- 結果展示 -->
     <div class="card" id="resultCard" style="display: none;">
         <h3>處理結果</h3>
         
@@ -184,7 +184,7 @@
                 <div class="stat-value" id="statRatio">0%</div>
             </div>
             <div class="stat-box">
-                <div class="stat-label">執行耗時</div>
+                <div class="stat-label">耗時</div>
                 <div class="stat-value" id="statTime">0 ms</div>
             </div>
         </div>
@@ -205,7 +205,7 @@
         <button id="downloadBtn" class="btn-download">儲存檔案</button>
     </div>
 
-    <!-- JavaScript 前端邏輯 -->
+    <!-- JavaScript 前端 -->
     <script>
         let pythonLoaded = false;
         let currentInputBytes = null;
@@ -226,8 +226,8 @@
             const slice = uint8Array.length > limit ? uint8Array.slice(0, limit) : uint8Array;
             const decoder = new TextDecoder('utf-8', { fatal: false });
             let text = decoder.decode(slice);
-            text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // 替換不可見字元為亂碼符號
-            if (uint8Array.length > limit) text += "\n\n... (檔案過大，僅顯示前 " + limit + " 字元)";
+            text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+            if (uint8Array.length > limit) text += `\n... (檔案過大，僅顯示前 ${limit} 字元)`;
             return text;
         }
 
@@ -257,7 +257,7 @@
                 hexDump += `${offset}  ${hexStr} |${asciiStr}|\n`;
             }
             
-            if (uint8Array.length > limit) hexDump += `\n... (檔案過大，僅顯示前 ${limit} bytes 的 Hex 資訊)`;
+            if (uint8Array.length > limit) hexDump += `\n... (檔案過大，僅顯示前 ${limit} bytes)`;
             return hexDump;
         }
 
@@ -277,7 +277,7 @@
             }
         }
 
-        // 綁定預覽切換按鈕事件 (點擊後切換 data-view 並重繪)
+        // 綁定預覽切換按鈕事件
         document.getElementById('inputToggleBtn').addEventListener('click', (e) => {
             const currentMode = e.target.getAttribute('data-view');
             e.target.setAttribute('data-view', currentMode === 'text' ? 'hex' : 'text');
@@ -307,7 +307,7 @@
             const arrayBuffer = await file.arrayBuffer();
             currentInputBytes = new Uint8Array(arrayBuffer);
 
-            // 如果是壓縮檔，預設開啟 Hex 檢視；否則用純文字檢視
+            // 如果是壓縮檔, 預設 Hex 檢視, 否則用純文字檢視
             const isCompressed = file.name.endsWith('.lz78') || file.name.endsWith('.ah');
             const defaultView = isCompressed ? 'hex' : 'text';
             
@@ -321,7 +321,7 @@
             document.getElementById('resultCard').style.display = 'none'; 
         });
 
-        // 執行壓縮/解壓縮按鈕邏輯
+        // 執行壓縮/解壓縮按鈕
         document.getElementById('processBtn').addEventListener('click', () => {
             if (!currentInputBytes) return alert("請先選擇檔案！");
             
@@ -360,7 +360,7 @@
                     document.getElementById('statRatio').innerText = `${ratio}%`;
                     document.getElementById('statTime').innerText = `${timeTaken} ms`;
                     
-                    /* 判斷與控制警告區塊的邏輯 */
+                    /* 判斷與控制警告區塊 */
                     const ratioEl = document.getElementById('statRatio');
                     const warningBox = document.getElementById('compressionWarning');
 
@@ -375,12 +375,12 @@
                             warningBox.style.display = 'none';
                         }
                     } else {
-                        // 解壓縮模式，顯示藍字並隱藏警告框
+                        // 解壓縮模式下顯示藍字並隱藏警告框
                         ratioEl.style.color = "var(--primary)";
                         warningBox.style.display = 'none';
                     }
 
-                    // 如果是壓縮操作，預設 Hex；否則預設 Text 預覽
+                    // 如果是執行壓縮, 預設 Hex 檢視, 否則用純文字檢視
                     const outputDefaultView = (operation === 'compress') ? 'hex' : 'text';
                     document.getElementById('outputToggleBtn').setAttribute('data-view', outputDefaultView);
                     updatePreviewDisplay('outputPreview', 'outputToggleBtn', currentOutputBytes);
@@ -398,7 +398,7 @@
             }, 50);
         });
 
-        // 下載檔案邏輯
+        // 下載檔案
         document.getElementById('downloadBtn').addEventListener('click', () => {
             if (!currentOutputBytes) return;
             
@@ -426,7 +426,7 @@
         });
     </script>
 
-    <!-- py-config 與 py-script 區塊 -->
+    <!-- py-config 與 py-script -->
     <py-config>
         [files]
         "lz78.py" = "./lz78.py"
