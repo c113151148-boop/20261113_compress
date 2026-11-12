@@ -16,11 +16,13 @@
 > 	- 檔案位元組序列之轉換（使用 Uint8Array、Blob 類別與 js_uint8_array.to_bytes()、to_js() 方法）
 > 	- 載入 adaptive_huffman.py 與 lz78.py 進行壓縮與解壓縮處理
 > 	- 顯示壓縮結果資訊
-- adaptive_huffman.py
->	- 動態霍夫曼演算法
->	- 實作字元組序列之資料的壓縮與解壓縮
+
 - lz78.py
 >	- LZ78 演算法
+>	- 實作字元組序列之資料的壓縮與解壓縮
+
+- adaptive_huffman.py
+>	- 動態霍夫曼演算法
 >	- 實作字元組序列之資料的壓縮與解壓縮
 
 ---
