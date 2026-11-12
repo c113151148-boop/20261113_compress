@@ -1,7 +1,15 @@
 # lz78.py
 
 def compress_data(data: bytes) -> bytes:
-    """LZ78 壓縮二進位資料"""
+    """
+    給 JS 用: LZ78 壓縮
+
+    Args:
+        data (bytes): 要壓縮的位元組序列
+
+    Returns:
+        bytes: 壓縮後的位元組序列
+    """
     if not data:
         return b""
 
@@ -27,7 +35,7 @@ def compress_data(data: bytes) -> bytes:
             dict_size += 1
             w = b""
             
-            # 若字典滿了 (2 bytes 的上限是 65535)，則重置字典
+            # 若字典滿了 (2 bytes 上限 65535)，則重置字典
             if dict_size == 65535:
                 dictionary = {b"": 0}
                 dict_size = 1
@@ -39,7 +47,15 @@ def compress_data(data: bytes) -> bytes:
     return bytes(out)
 
 def decompress_data(data: bytes) -> bytes:
-    """LZ78 解壓縮二進位資料"""
+    """
+    給 JS 用: LZ78 解壓縮
+
+    Args:
+        data (bytes): 要解壓縮的位元組序列
+
+    Returns:
+        bytes: 解壓縮後的位元組序列
+    """
     if not data:
         return b""
 
